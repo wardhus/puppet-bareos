@@ -15,26 +15,34 @@
 #   Whether https should be used in repo URL
 #
 class bareos::repository (
-  Enum['19.2', '20', '21'] $release             = '21',
-  Optional[String[1]]      $gpg_key_fingerprint = undef,
-  Boolean                  $subscription        = false,
-  Optional[String]         $username            = undef,
-  Optional[String]         $password            = undef,
-  Boolean                  $https               = true,
+  Enum['19.2', '20', '21', 'current'] $release             = '21',
+  Optional[String[1]]                 $gpg_key_fingerprint = undef,
+  Boolean                             $subscription        = false,
+  Optional[String]                    $username            = undef,
+  Optional[String]                    $password            = undef,
+  Boolean                             $https               = true,
 ) {
   if $https {
     $scheme = 'https://'
   } else {
     $scheme = 'http://'
   }
+
+  if $release == 'current' {
+    $uri_path = 'current'
+  } else {
+    $uri_path = "bareos/release/${release}"
+  }
+
+  
   if $subscription {
     if empty($username) or empty($password) {
       fail('For Bareos subscription repos both username and password are required.')
     }
     # note the .com
-    $address = "download.bareos.com/bareos/release/${release}/"
+    $address = "download.bareos.com/${uri_path}/"
   } else {
-    $address = "download.bareos.org/bareos/release/${release}/"
+    $address = "download.bareos.org/${uri_path}/"
   }
 
   $os = $facts['os']['name']
