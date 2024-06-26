@@ -15,6 +15,7 @@
 # @param pagination_default_value
 # @param save_previous_state
 # @param label_pooltype
+# @param theme
 # @param directors
 #
 class bareos::webui (
@@ -33,6 +34,7 @@ class bareos::webui (
   $pagination_default_value = 25,
   $save_previous_state = false,
   $label_pooltype = '',
+  $theme = 'default',
   $directors = {},
 ) inherits bareos {
   if $manage_package {
